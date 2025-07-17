@@ -23,12 +23,14 @@ const PORT=process.env.PORT;
 //express_api.use(helmet())// to set default header 
 //express_api.use(xss()); // to help reduce cross site scripting 
 //express_api.use(ExpressMongoSanitize())// for mongo sanitizations 
-express_api.use(express.json());
+
 //cors 
 express_api.use(cors({
     origin: 'http://localhost:3000',
   credentials: true
 }))
+// parsing 
+express_api.use(express.json());
 
 //routes 
 express_api.use('/api/User',userRouter);

@@ -18,7 +18,10 @@ const Register = () => {
   const handleRegister = async e => {
     e.preventDefault();
     try {
-      await axios.post('/User/api/newUser',form);
+      const response =await axios.post('/User/newUser',form);
+      console.log('Status:', response.status);
+      console.log('Data:', response.data);
+      console.log('Full response object:', response);
       setMessage('Please verify Otp !!')
       setuser("otp")
       console.log(user);
@@ -26,7 +29,7 @@ const Register = () => {
       console.log("Registration successful. Moving to OTP phase.");
 
     } catch (err) {
-      console.log(form)
+      console.error(err)
       setMessage('Registration failed: ' + err.response?.data?.message);
     }
   };
@@ -35,7 +38,7 @@ const Register = () => {
   const handleotp=async (e)=>{
     e.preventDefault();
     try{
-      await axios.post('User/api/verifyotp',otpverify);
+     await axios.post('User/api/verifyotp',otpverify);
       setMessage("Otp verified !!")
       setuser("Login")
       console.log("OTP verified. Moving to login.");

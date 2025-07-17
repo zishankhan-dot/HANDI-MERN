@@ -7,9 +7,8 @@ const id=Schema.Types.ObjectId;
 const userSchema=new Schema({
     UserId:id,
     Name:{type:String,Required:true},
-    Email:{type:String,Required:true},
+    Email:{type: String,required: true, unique: true,match:/\.com$/},  
     PhoneNumber:{type:String,required:true},
-    Email:{type: String,required: true, unique: true,match:/\.com$/},
     Password:{type: String,required: true},
     ConfirmPassword:{
         type:String,
@@ -26,14 +25,15 @@ const userSchema=new Schema({
 });
 
 //using pre to undefined confirmpassword .. its just for validation 
-userSchema.pre("save",function(next){
+userSchema.pre('save',function(next){
     this.ConfirmPassword=undefined
-    next;
+    next();
 });
 
 //encrypting before saving password .. 
-userSchema.pre("save",function(next){
-    this.Password=bcrypt.hash(PEPPER+this.password)
+userSchema.pre('save',async function(next){
+    this.Password=await bcrypt.hash(PEPPER+this.Password,10)
+    next();
 })
 
 const User=mongoose.model("User",userSchema);

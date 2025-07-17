@@ -4,7 +4,7 @@ import express, { Router } from 'express';
 
 const userRouter=express.Router();
 //register 
-userRouter.post('/api/newUser',NewUser);
+userRouter.post('/newUser',NewUser);
 //otp verification
 //userRouter.post("/api/verifyotp",VerifyOtp)
 //login
