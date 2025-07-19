@@ -10,29 +10,18 @@ const userSchema=new Schema({
     Email:{type: String,required: true, unique: true,match:/\.com$/},  
     PhoneNumber:{type:String,required:true},
     Password:{type: String,required: true},
-    ConfirmPassword:{
-        type:String,
-        required:true,
-        validate:{
-            validator:function(value){
-                return this.Password===value;
-            },
-            message:"password dont match"
-        }
-
-    },
+    isphoneVerified:{type:Boolean,default:"false"},
+    Otp:{type:String},
+    otp_expires:{type:Date},
     createdAt:{type: Date,default:Date.now,immutable:true},
 });
 
-//using pre to undefined confirmpassword .. its just for validation 
-userSchema.pre('save',function(next){
-    this.ConfirmPassword=undefined
-    next();
-});
+
 
 //encrypting before saving password .. 
 userSchema.pre('save',async function(next){
     this.Password=await bcrypt.hash(PEPPER+this.Password,10)
+    this.ConfirmPassword=await bcrypt.hash(PEPPER+this.Password,10)
     next();
 })
 

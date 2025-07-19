@@ -1,4 +1,12 @@
 import User from "../models/user.models.js";
+import sendSms from "../middleware/sms.js";
+import random from 'randomstring';
+import crypto from 'crypto'
+import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken"
+// getting secret key from .env 
+const SECRETKEY=process.env.SECRETKEY;
+
 // middleware to create new user 
 
 export const NewUser=async (req,res)=>{
@@ -15,10 +23,21 @@ export const NewUser=async (req,res)=>{
     }
     else{
         try{
-        const newUser=new User({Name,Email,PhoneNumber,Password,ConfirmPassword});
-        console.log(newUser);
+        const newUser=new User({Name,Email,PhoneNumber,Password});
+        //creating otp 
+        const otp = random.generate({length:6,charset:'numeric'});
+        console.log(otp)
+        const otpHashed=crypto.createHash('SHA256').update(otp).digest('hex');
+        console.log(otpHashed);
+        //saving it 
+        newUser.Otp=otpHashed;
+        newUser.otp_expires= new Date(Date.now()+5*60*1000);
+        const text=`OTP FOR HANDI : ${otp}`;
+        console.log(text);
+        //sending otp to mobile phone 
+        await sendSms(PhoneNumber,text);
         await newUser.save();
-      return  res.status(200).json({message:"User Created"})}
+        return  res.status(200).json({message:"User Created"})}
         catch(err){
             console.error(err);
           return  res.status(400).json({message:"User Registration failed !!"});
@@ -27,6 +46,41 @@ export const NewUser=async (req,res)=>{
     }
     
 
+}
+//middleware to validate otp and create token ... using jwt to create token  
+export const VerifyOtp=async(req,res)=>{
+    const {otp,PhoneNumber}=req.body;
+    
+    if(!otp){return res.status(400).json({message:"Enter Valid otp"})}
+    else {
+        const isUser=await User.findOne({PhoneNumber});
+        if(!isUser){
+           return  res.status(400).json({message:"UserDont Exist"})
+        }
+        const otpHashed = crypto.createHash('SHA256').update(otp).digest('hex');
+        console.log(otpHashed.toString())
+        console.log(new Date(Date.now()).toISOString());
+        console.log(new Date(isUser.otp_expires.getTime()).toISOString());
+        if( isUser.otp_expires.getTime()<Date.now() || otpHashed.toString() !=isUser.Otp){
+          return   res.status(400).json({message:"OTP INVALID OR EXPIRED"})
+        
+        }
+        else{
+            isUser.isphoneVerified=true;
+            isUser.Otp=null;
+            isUser.otp_expires=null;
+            await isUser.save();
+            const token= jwt.sign({
+                User:isUser._id,
+                Email:isUser.Email,
+                PhoneNumber:isUser.PhoneNumber},SECRETKEY,{expiresIn:'1h'});
+            res.cookie("auth",token,{maxAge:3600000});
+         return   res.status(200).json({ message: "OTP verified successfully", token });
+
+
+        }
+        
+    }
 }
 
 
@@ -44,7 +98,7 @@ export const loginUser=async (req,res)=>{
    const token=jwt.sign({
     userId:isUser._id,
     Email:isUser.Email
-   },secretkey,{expiresIn:"2h"});
+   },SECRETKEY,{expiresIn:"2h"});
 
    /// setting token to cookie ..
    res.cookie("authorization",token,{
@@ -66,7 +120,7 @@ export const checkTokenShareUserDetail=(req,res,next)=>{
         return res.status(402).json({message:"token not found , login again!!!!"})
     }
     try{
-       const decode= jwt.verify(token,secretkey)
+       const decode= jwt.verify(token,SECRETKEY)
         req.userData=decode;
         console.log("successfull verification !!");
         console.log(decode)

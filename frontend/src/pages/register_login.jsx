@@ -38,8 +38,8 @@ const Register = () => {
   const handleotp=async (e)=>{
     e.preventDefault();
     try{
-     await axios.post('User/api/verifyotp',otpverify);
-      setMessage("Otp verified !!")
+     await axios.post('User/verifyotp',{otp:otpverify,PhoneNumber:form.PhoneNumber});
+      setMessage("Otp verified  successfully !!")
       setuser("Login")
       console.log("OTP verified. Moving to login.");
 
@@ -54,8 +54,9 @@ const Register = () => {
   const handleLogin=async (e)=>{
     e.preventDefault();
     try{
+      setMessage("LOGIN OR REGISTER TO CONTINUE TO HANDI")
       await axios.post('User/api/Login',);
-      setMessage("Otp verified !!")
+      
       navigate("/Dashboard")
 
     }
@@ -71,6 +72,7 @@ const Register = () => {
     <div>
     {user === 'Register' &&(
     <form onSubmit={handleRegister}>
+<button onClick={()=>setuser('Register')}><h2>Register</h2> </button><button onClick={()=>setuser('Login')}><h2>LOGIN</h2></button>
       <h2>Register</h2>
       <input name="Name" placeholder="Name" onChange={handleChange} required />
       <input name="Email" type="email" placeholder="Email" onChange={handleChange} required />
@@ -82,19 +84,23 @@ const Register = () => {
     </form>
     )}
     {user==='Login'&&(
-      <form onSubmit={handleotp}>
+      <form onSubmit={handleLogin}>
         <h2>LOGIN</h2>
         <input name='email' type='email' placeholder='Email' required></input>
         <input name='password' type='password' placeholder='Password' required></input>
         <button type='submit'>Login</button>
+        <br></br>
+        <button onClick={()=>setuser('Register')}><h2>Register</h2> </button><button onClick={()=>setuser('Login')}><h2>LOGIN</h2></button>
+         {message && <p>{message}</p>}
         
       </form>
     )}
     {user==='otp'&&(
       <form onSubmit={handleotp}>
         <h2>Verify OTP</h2>
-        <input type='number' placeholder='Enter OTP' ></input>
+        <input type='number' placeholder='Enter OTP' onChange={e=>setoptverify(e.target.value)}></input>
         <button type='submit'>Submit</button>
+        {message && <p>{message}</p>}
       </form>
     )}
   </div>

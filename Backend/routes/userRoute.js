@@ -1,4 +1,4 @@
-import { NewUser,loginUser } from "../middleware/user.controller.js";
+import { NewUser,VerifyOtp,loginUser } from "../middleware/user.controller.js";
 
 import express, { Router } from 'express';
 
@@ -6,9 +6,9 @@ const userRouter=express.Router();
 //register 
 userRouter.post('/newUser',NewUser);
 //otp verification
-//userRouter.post("/api/verifyotp",VerifyOtp)
+userRouter.post("/verifyotp",VerifyOtp)
 //login
-userRouter.post("/api/login",loginUser);
+userRouter.post("/login",loginUser);
 
 
 export default userRouter;
