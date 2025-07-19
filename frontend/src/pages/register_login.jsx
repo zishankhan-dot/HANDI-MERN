@@ -84,16 +84,19 @@ const Register = () => {
     </form>
     )}
     {user==='Login'&&(
+      <div>
       <form onSubmit={handleLogin}>
         <h2>LOGIN</h2>
         <input name='email' type='email' placeholder='Email' required></input>
         <input name='password' type='password' placeholder='Password' required></input>
         <button type='submit'>Login</button>
         <br></br>
-        <button onClick={()=>setuser('Register')}><h2>Register</h2> </button><button onClick={()=>setuser('Login')}><h2>LOGIN</h2></button>
          {message && <p>{message}</p>}
+
         
       </form>
+      <button onClick={()=>setuser('Register')}><h2>Register</h2> </button><button onClick={()=>setuser('Login')}><h2>LOGIN</h2></button>
+      </div>
     )}
     {user==='otp'&&(
       <form onSubmit={handleotp}>

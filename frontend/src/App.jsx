@@ -1,6 +1,6 @@
 import React from 'react';
-import Register from '../src/pages/register_login';
-import Dashboard from '../src/pages/dashboard';
+import Register from './pages/register_login';
+import Dashboard from './pages/dashboard';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 function App() {
   return (
