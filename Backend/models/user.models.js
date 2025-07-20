@@ -1,7 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from 'bcrypt';
+import dotenv from "dotenv"
+dotenv.config();
 
-const PEPPER= process.env.PEPPER;
+const PEPPER=process.env.PEPPER;
+
 const id=Schema.Types.ObjectId;
 
 const userSchema=new Schema({
@@ -20,9 +23,14 @@ const userSchema=new Schema({
 
 //encrypting before saving password .. 
 userSchema.pre('save',async function(next){
-    this.Password=await bcrypt.hash(PEPPER+this.Password,10)
-    this.ConfirmPassword=await bcrypt.hash(PEPPER+this.Password,10)
-    next();
+    console.log(this.Password)
+    if(this.isModified("Password")){
+    this.Password=await bcrypt.hash(PEPPER+this.Password.trim(),10)
+    console.log("password Changed");
+    next();}
+    else{
+        console.log("password unchanged ")
+    }
 })
 
 const User=mongoose.model("User",userSchema);

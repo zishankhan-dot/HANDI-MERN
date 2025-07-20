@@ -4,8 +4,12 @@ import random from 'randomstring';
 import crypto from 'crypto'
 import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken"
+import dotenv from 'dotenv'
+dotenv.config();
 // getting secret key from .env 
 const SECRETKEY=process.env.SECRETKEY;
+//getting Pepper from .env
+const PEPPER= process.env.PEPPER;
 
 // middleware to create new user 
 
@@ -91,13 +95,18 @@ export const loginUser=async (req,res)=>{
 
 // checking for user in User table 
    const isUser= await User.findOne({Email})
+   console.log(Password)
    if(!isUser){return res.status(402).json({message:"EMAIL NOT FOUND!!"})}
-// pepper = some random string 
-   const isPassword=await bcrypt.compare(pepper+Password,isUser.Password);
+   console.log(PEPPER)
+  console.log(isUser)
+   const isPassword=await bcrypt.compare(PEPPER+Password.trim(), isUser.Password);
+   console.log(isPassword)
    if(!isPassword){return res.status(402).json({message:"PASSWORD INCORRECT!!"})}
+   if(isUser.isphoneVerified !=true){return res.status(400).json({message:"FIRST VERIFY PHONENUMBER"})}
    const token=jwt.sign({
     userId:isUser._id,
-    Email:isUser.Email
+    Email:isUser.Email,
+    PhoneNumber:isUser.PhoneNumber
    },SECRETKEY,{expiresIn:"2h"});
 
    /// setting token to cookie ..
