@@ -1,0 +1,119 @@
+/* Global CSS overrides to remove all border-radius */
+
+/* Remove border-radius from all elements */
+* {
+  border-radius: 0 !important;
+}
+
+/* Navbar text color override - ensure navbar text is white */
+.navbar-nav .nav-link {
+  color: #ffffff !important;
+}
+
+.navbar-brand {
+  color: #ffffff !important;
+}
+
+/* Custom Modal Centering */
+.custom-modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 1rem);
+  margin: 0.5rem auto;
+}
+
+.modal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.modal-dialog {
+  margin: auto !important;
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 2rem);
+}
+
+.modal-content {
+  margin: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Center modal header content */
+.modal-header {
+  justify-content: center !important;
+  position: relative;
+}
+
+.modal-header .btn-close {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.modal-title {
+  text-align: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+/* Specific Bootstrap component overrides */
+.btn,
+.form-control,
+.form-select,
+.card,
+.alert,
+.modal-content,
+.modal-header,
+.modal-body,
+.modal-footer,
+.dropdown-menu,
+.dropdown-item,
+.navbar,
+.nav-tabs .nav-link,
+.nav-pills .nav-link,
+.badge,
+.toast,
+.pagination .page-link,
+.input-group-text,
+.list-group-item,
+.accordion-item,
+.accordion-button,
+.offcanvas,
+.popover,
+.tooltip,
+.carousel-item img,
+.carousel-control-prev,
+.carousel-control-next {
+  border-radius: 0 !important;
+}
+
+/* Remove border-radius from pseudo-elements */
+.btn::before,
+.btn::after,
+.card::before,
+.card::after,
+.form-control::before,
+.form-control::after {
+  border-radius: 0 !important;
+}
+
+/* Ensure square corners for all custom components */
+.dish,
+.item-card,
+.admin-card,
+.register-card,
+.loading-container,
+.error-container {
+  border-radius: 0 !important;
+}
+
+/* Remove rounded corners from images */
+img {
+  border-radius: 0 !important;
+}

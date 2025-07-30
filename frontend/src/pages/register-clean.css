@@ -1,0 +1,185 @@
+/* Clean Register & Login Styles */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding-top: 80px; /* Account for fixed navbar */
+}
+
+/* Container and layout fixes */
+.container {
+  max-width: 100%;
+}
+
+/* Bootstrap overrides for cleaner look */
+.card {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.card-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e9ecef;
+  font-size: 1rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #c82333;
+  border-color: #c82333;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+.btn-outline-primary {
+  border-color: #dc3545;
+  color: #dc3545;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+/* Alert styling */
+.alert {
+  border: none;
+  padding: 1rem;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Toggle buttons styling */
+.toggle-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-buttons .btn {
+  flex: 1;
+  width: 50%;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.d-flex.gap-2 .btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+/* OTP specific styling */
+.form-control[style*="letter-spacing"] {
+  font-size: 1.25rem;
+  text-align: center;
+  letter-spacing: 0.5rem !important;
+  font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+  }
+  
+  .btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+  }
+}

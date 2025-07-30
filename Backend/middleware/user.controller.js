@@ -51,6 +51,53 @@ export const NewUser=async (req,res)=>{
     
 
 }
+
+// middleware to regenerate OTP
+export const RegenerateOtp = async (req, res) => {
+    const { PhoneNumber } = req.body;
+    
+    if (!PhoneNumber) {
+        return res.status(400).json({ message: "Phone number is required" });
+    }
+
+    try {
+        const isUser = await User.findOne({ PhoneNumber });
+        if (!isUser) {
+            return res.status(400).json({ message: "User doesn't exist" });
+        }
+
+        // Check if user is already verified
+        if (isUser.isphoneVerified) {
+            return res.status(400).json({ message: "Phone number already verified" });
+        }
+
+        // Generate new OTP
+        const otp = random.generate({ length: 6, charset: 'numeric' });
+        console.log('New OTP:', otp);
+        const otpHashed = crypto.createHash('SHA256').update(otp).digest('hex');
+        console.log('New OTP Hashed:', otpHashed);
+
+        // Update user with new OTP and expiration
+        isUser.Otp = otpHashed;
+        isUser.otp_expires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
+        
+        const text = `NEW OTP FOR HANDI : ${otp}`;
+        console.log(text);
+        
+        // Send new OTP to mobile phone
+        await sendSms(PhoneNumber, text);
+        await isUser.save();
+        
+        return res.status(200).json({ 
+            message: "New OTP sent successfully",
+            expiresAt: isUser.otp_expires
+        });
+    } catch (err) {
+        console.error('Regenerate OTP Error:', err);
+        return res.status(500).json({ message: "Failed to send new OTP" });
+    }
+};
+
 //middleware to validate otp and create token ... using jwt to create token  
 export const VerifyOtp=async(req,res)=>{
     const {otp,PhoneNumber}=req.body;
@@ -64,6 +111,17 @@ export const VerifyOtp=async(req,res)=>{
         const otpHashed = crypto.createHash('SHA256').update(otp).digest('hex');
         console.log(otpHashed.toString())
         console.log(new Date(Date.now()).toISOString());
+        
+        // Check if otp_expires exists before calling getTime()
+        if (!isUser.otp_expires) {
+            return res.status(400).json({message:"No OTP found. Please request a new OTP"});
+        }
+        
+        // Check if OTP exists
+        if (!isUser.Otp) {
+            return res.status(400).json({message:"No OTP found. Please request a new OTP"});
+        }
+        
         console.log(new Date(isUser.otp_expires.getTime()).toISOString());
         if( isUser.otp_expires.getTime()<Date.now() || otpHashed.toString() !=isUser.Otp){
           return   res.status(400).json({message:"OTP INVALID OR EXPIRED"})
@@ -75,7 +133,7 @@ export const VerifyOtp=async(req,res)=>{
             isUser.otp_expires=null;
             await isUser.save();
             const token= jwt.sign({
-                User:isUser._id,
+                userId:isUser._id,
                 Email:isUser.Email,
                 PhoneNumber:isUser.PhoneNumber},SECRETKEY,{expiresIn:'1h'});
             res.cookie("auth",token,{maxAge:3600000});
@@ -115,7 +173,15 @@ export const loginUser=async (req,res)=>{
    })
   return res.status(200).json({
     message:"login successful",
-    role:"User"
+    role:"User",
+    token: token,
+    user: {
+      id: isUser._id,
+      _id: isUser._id,
+      Name: isUser.Name,
+      Email: isUser.Email,
+      PhoneNumber: isUser.PhoneNumber
+    }
 
    })
 }

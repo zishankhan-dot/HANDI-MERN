@@ -13,6 +13,7 @@ const userSchema=new Schema({
     Email:{type: String,required: true, unique: true,match:/\.com$/},  
     PhoneNumber:{type:String,required:true},
     Password:{type: String,required: true},
+    role:{type:String,enum:['user','admin'],default:'user'},
     isphoneVerified:{type:Boolean,default:"false"},
     Otp:{type:String},
     otp_expires:{type:Date},
